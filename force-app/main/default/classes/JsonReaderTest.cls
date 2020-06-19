@@ -9,7 +9,7 @@ private class JsonReaderTest {
     @IsTest
     static void testBehavior() {
         String value = 'b';
-        String jsonString = String.format('{"a": "{0}"}', new List<String>{value});
+        String jsonString = '{"a": "' + value + '"}';
 
         Test.startTest();
         Object result = new JsonReader(jsonString).read('a');
