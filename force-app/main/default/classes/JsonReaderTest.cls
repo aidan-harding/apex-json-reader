@@ -60,4 +60,17 @@ private class JsonReaderTest {
 
         System.assertEquals('expected', result);
     }
+
+    @IsTest
+    static void missingKey() {
+        String jsonString = '{"a": { "a2": "expected"} }';
+        final String NO_RESULT = 'no result';
+        Test.startTest();
+        Object result = new JsonReader(jsonString)
+                .setMissingKeyResult(NO_RESULT)
+                .read('a.nope');
+        Test.stopTest();
+
+        System.assertEquals(NO_RESULT, result);
+    }
 }

@@ -20,6 +20,11 @@ public class JsonReader {
         theData = untypedJsonObject;
     }
 
+    public JsonReader setMissingKeyResult(Object missingKeyResult) {
+        this.missingKeyResult = missingKeyResult;
+        return this;
+    }
+
     public Object read(String jsonPath) {
         return read(new RegexFindIterator(JSON_SEARCH_PATH_PATTERN, jsonPath), theData);
     }
