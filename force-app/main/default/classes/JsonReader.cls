@@ -10,7 +10,7 @@ public class JsonReader {
     private Object theData;
     private Object missingKeyResult = null;
 
-    private static final Pattern JSON_SEARCH_PATH_PATTERN = Pattern.compile('(\\[\\d+\\])|([\\w]+)');
+    private static final Pattern JSON_SEARCH_PATH_PATTERN = Pattern.compile('(\\[\\d+])|([\\w]+)');
 
     public JsonReader(String jsonString) {
         theData = JSON.deserializeUntyped(jsonString);
