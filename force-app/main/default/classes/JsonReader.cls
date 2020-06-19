@@ -15,6 +15,10 @@ public class JsonReader {
         theData = JSON.deserializeUntyped(jsonString);
     }
 
+    public JsonReader(Object untypedJsonObject) {
+        theData = untypedJsonObject;
+    }
+
     public Object read(String jsonPath) {
         return read(new RegexFindIterator(JSON_SEARCH_PATH_PATTERN, jsonPath), theData);
     }
@@ -22,28 +26,28 @@ public class JsonReader {
     private Object read(RegexFindIterator jsonPathIterator, Object thisData) {
         String thisKey = jsonPathIterator.next();
 
-        Object nextData;
-        if(thisKey.contains('[')) {
-            List<Object> dataAsList = (List<Object>)thisData;
-            Integer index = Integer.valueOf(thisKey.substring(1, thisKey.length()-1));
-            if(index < dataAsList.size()) {
-                nextData = dataAsList[index];
-            } else {
-                nextData = missingKeyResult;
-            }
-        } else {
-            Map<String, Object> dataAsMap = (Map<String, Object>)thisData;
-            if(dataAsMap.containsKey(thisKey)) {
-                nextData = ((Map<String, Object>)thisData).get(thisKey);
-            } else {
-                nextData = missingKeyResult;
-            }
-        }
+        Object nextData = thisKey.contains('[') ?
+                readFromList((List<Object>)thisData, thisKey)
+                :
+                readFromMap((Map<String, Object>)thisData, thisKey);
 
         if(nextData != null && nextData != missingKeyResult && jsonPathIterator.hasNext()) {
             return read(jsonPathIterator, nextData);
         } else {
             return nextData;
+        }
+    }
+
+    private Object readFromMap(Map<String, Object> dataAsMap, String thisKey) {
+        return dataAsMap.containsKey(thisKey) ? dataAsMap.get(thisKey) : missingKeyResult;
+    }
+
+    private Object readFromList(List<Object> dataAsList, String thisKey) {
+        Integer index = Integer.valueOf(thisKey.substring(1, thisKey.length() - 1));
+        if (index < dataAsList.size()) {
+            return dataAsList[index];
+        } else {
+            return missingKeyResult;
         }
     }
 }
