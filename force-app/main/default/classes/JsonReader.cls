@@ -22,20 +22,28 @@ public class JsonReader {
     private Object read(RegexFindIterator jsonPathIterator, Object thisData) {
         String thisKey = jsonPathIterator.next();
 
+        Object nextData;
         if(thisKey.contains('[')) {
-            return null;
+            List<Object> dataAsList = (List<Object>)thisData;
+            Integer index = Integer.valueOf(thisKey.substring(1, thisKey.length()-2));
+            if(index < dataAsList.size()) {
+                nextData = dataAsList[index];
+            } else {
+                nextData = missingKeyResult;
+            }
         } else {
             Map<String, Object> dataAsMap = (Map<String, Object>)thisData;
             if(dataAsMap.containsKey(thisKey)) {
-                Object nextData = ((Map<String, Object>)thisData).get(thisKey);
-                if(nextData != null && jsonPathIterator.hasNext()) {
-                    return read(jsonPathIterator, nextData);
-                } else {
-                    return nextData;
-                }
+                nextData = ((Map<String, Object>)thisData).get(thisKey);
             } else {
-                return missingKeyResult;
+                nextData = missingKeyResult;
             }
+        }
+
+        if(nextData != null && nextData != missingKeyResult && jsonPathIterator.hasNext()) {
+            return read(jsonPathIterator, nextData);
+        } else {
+            return nextData;
         }
     }
 }

@@ -29,4 +29,16 @@ private class JsonReaderTest {
 
         System.assertEquals(value, result);
     }
+
+    @IsTest
+    static void withList() {
+        String value = 'b';
+        String jsonString = '{"a": { "a2": ["x", "' + value + '"}] }';
+
+        Test.startTest();
+        Object result = new JsonReader(jsonString).read('a.a2[1]');
+        Test.stopTest();
+
+        System.assertEquals(value, result);
+    }
 }
