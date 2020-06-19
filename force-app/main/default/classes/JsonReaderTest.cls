@@ -39,4 +39,26 @@ private class JsonReaderTest {
 
         System.assertEquals('expected', result);
     }
+
+    @IsTest
+    static void twoDimensionalList() {
+        String jsonString = '{"a": { "a2": ["x", ["expected"]] } }';
+
+        Test.startTest();
+        Object result = new JsonReader(jsonString).read('a.a2[1][0]');
+        Test.stopTest();
+
+        System.assertEquals('expected', result);
+    }
+
+    @IsTest
+    static void mixedListsAndNesting() {
+        String jsonString = '{"a": { "a2": ["x", { "b": [["expected"]] } ] } }';
+
+        Test.startTest();
+        Object result = new JsonReader(jsonString).read('a.a2[1].b[0][0]');
+        Test.stopTest();
+
+        System.assertEquals('expected', result);
+    }
 }
