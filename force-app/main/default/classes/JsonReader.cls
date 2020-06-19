@@ -7,24 +7,23 @@
 public class JsonReader {
 
     private Object theData;
-    private static final Pattern jsonPathSearchPattern = Pattern.compile('(\\[\\d+\\])|([\\w]+)');
+    private static final Pattern JSON_SEARCH_PATH_PATTERN = Pattern.compile('(\\[\\d+\\])|([\\w]+)');
 
     public JsonReader(String jsonString) {
         theData = JSON.deserializeUntyped(jsonString);
     }
 
     public Object read(String jsonPath) {
-        return read(new RegexFindIterator(jsonPathSearchPattern, jsonPath), theData);
+        return read(new RegexFindIterator(JSON_SEARCH_PATH_PATTERN, jsonPath), theData);
     }
 
     private Object read(RegexFindIterator jsonPathIterator, Object thisData) {
-        Object nextData = ((Map<String, Object>)thisData).get(jsonPath[0]);
-        jsonPath.remove(0);
+        Object nextData = ((Map<String, Object>)thisData).get(jsonPathIterator.next());
 
-        if(jsonPath.isEmpty()) {
-            return nextData;
+        if(nextData != null && jsonPathIterator.hasNext()) {
+            return read(jsonPathIterator, nextData);
         } else {
-            return read(jsonPath, nextData);
+            return nextData;
         }
     }
 
@@ -38,11 +37,11 @@ public class JsonReader {
             hasNext = matcher.find();
         }
 
-        private Boolean hasNext() {
+        public Boolean hasNext() {
             return hasNext;
         }
 
-        private String next() {
+        public String next() {
             String result = matcher.group();
             hasNext = matcher.find();
             return result;
