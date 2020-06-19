@@ -7,6 +7,8 @@
 public class JsonReader {
 
     private Object theData;
+    private Object missingKeyValue = null;
+
     private static final Pattern JSON_SEARCH_PATH_PATTERN = Pattern.compile('(\\[\\d+\\])|([\\w]+)');
 
     public JsonReader(String jsonString) {
@@ -18,33 +20,22 @@ public class JsonReader {
     }
 
     private Object read(RegexFindIterator jsonPathIterator, Object thisData) {
-        Object nextData = ((Map<String, Object>)thisData).get(jsonPathIterator.next());
+        String thisKey = jsonPathIterator.next();
 
-        if(nextData != null && jsonPathIterator.hasNext()) {
-            return read(jsonPathIterator, nextData);
+        if(thisKey.contains('[')) {
+            return null;
         } else {
-            return nextData;
-        }
-    }
-
-    private class RegexFindIterator implements Iterator<String> {
-
-        private Matcher matcher;
-        private Boolean hasNext;
-
-        public RegexFindIterator(Pattern pattern, String searchString) {
-            matcher = pattern.matcher(searchString);
-            hasNext = matcher.find();
-        }
-
-        public Boolean hasNext() {
-            return hasNext;
-        }
-
-        public String next() {
-            String result = matcher.group();
-            hasNext = matcher.find();
-            return result;
+            Map<String, Object> dataAsMap = (Map<String, Object>)thisData;
+            if(dataAsMap.containsKey(thisKey)) {
+                Object nextData = ((Map<String, Object>)thisData).get(thisKey);
+                if(nextData != null && jsonPathIterator.hasNext()) {
+                    return read(jsonPathIterator, nextData);
+                } else {
+                    return nextData;
+                }
+            } else {
+                return missingKeyValue;
+            }
         }
     }
 }
