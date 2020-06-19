@@ -25,6 +25,8 @@ public class JsonReader {
         Object nextData;
         if(thisKey.contains('[')) {
             List<Object> dataAsList = (List<Object>)thisData;
+            System.debug(thisKey);
+            System.debug(thisKey.substring(1, thisKey.length()-2));
             Integer index = Integer.valueOf(thisKey.substring(1, thisKey.length()-2));
             if(index < dataAsList.size()) {
                 nextData = dataAsList[index];
