@@ -7,7 +7,7 @@
 public class JsonReader {
 
     private Object theData;
-    private Object missingKeyValue = null;
+    private Object missingKeyResult = null;
 
     private static final Pattern JSON_SEARCH_PATH_PATTERN = Pattern.compile('(\\[\\d+\\])|([\\w]+)');
 
@@ -34,7 +34,7 @@ public class JsonReader {
                     return nextData;
                 }
             } else {
-                return missingKeyValue;
+                return missingKeyResult;
             }
         }
     }
