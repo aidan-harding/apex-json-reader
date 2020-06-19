@@ -1,7 +1,8 @@
 /**
  * @author aidan@nebulaconsulting.co.uk
  * @date 19/06/2020
- * @description (if required)
+ * @description Read keys from a JSON object by specifying the path. Suitable for only a small number of reads as
+ * each one is found independently
  */
 
 public class JsonReader {

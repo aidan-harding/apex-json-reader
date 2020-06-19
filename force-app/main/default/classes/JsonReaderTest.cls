@@ -3,7 +3,6 @@
  * @date 19/06/2020
  */
 
-
 @IsTest
 private class JsonReaderTest {
 
